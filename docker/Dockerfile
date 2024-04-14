@@ -16,7 +16,9 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY . .
+RUN git clone https://github.com/ggerganov/llama.cpp.git
+
+WORKDIR /app/llama.cpp
 
 # Set nvcc architecture
 ENV CUDA_DOCKER_ARCH=${CUDA_DOCKER_ARCH}
@@ -39,6 +41,6 @@ FROM ${BASE_CUDA_RUN_CONTAINER} as runtime
 RUN apt-get update && \
     apt-get install -y libcurl4-openssl-dev
 
-COPY --from=build /app/server /server
+COPY --from=build /app/llama.cpp/server /server
 
 ENTRYPOINT [ "/server" ]
